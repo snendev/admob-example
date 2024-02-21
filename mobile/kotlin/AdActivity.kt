@@ -14,6 +14,9 @@ import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoa
 private const val AD_UNIT_ID = "ca-app-pub-3940256099942544/5354046379"
 private const val TAG = "AdActivity"
 
+// This example is based on (and a heavily simplified version of):
+// https://github.com/googleads/googleads-mobile-android-examples/blob/main/kotlin/admob/RewardedInterstitialExample/app/src/main/java/com/google/android/gms/example/rewardedinterstitialexample/MainActivity.kt
+
 class AdActivity(): Activity() {
 
     private var rewardedAd: RewardedInterstitialAd? = null

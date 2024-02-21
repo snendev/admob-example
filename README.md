@@ -56,6 +56,17 @@ This example also issues log statements that are helpful for understanding the a
 
 There are several TODOs and caveats here, including pre-loading ads and configuring some useful loading screens in case the ad still doesn't render immediately. Additionally, [the Android docs](https://developer.android.com/training/basics/intents/result) suggest using separate methods from Activity classes defined in the `AndroidX` package. These classes support a more thorough implementations of the `startActivityForResult` method (which can be buggy in a few ways on its own, see the docs). Since `NativeActivity` does not provide these methods, a proper solution should ensure that `startActivityForResult` is used in a way that mimics these advanced AndroidX APIs.
 
+## Notes on xbuild
+
+`xbuild` is the crate which bundles the application for us; getting this to work required a good amount of configuration. All the important stuff can be found in `mobile/manifest.yaml`.
+
+Of particular note are the following configuration details:
+
+- We need `gradle: true` so that we can configure additional dependencies, etc.
+- We can add the admob dependency in the `dependencies` section, since xbuild packages this into the gradle build files that it creates.
+- `manifest.application.has_code` must be set to `True` since it is `False` by default! If `false`, Android will not import any of the kotlin files we have written, even though they will be copied into the built project.
+- `manifest.application.activities` must be included to specify our `NativeActivity` and our `AdActivity`. Order is important here! The first activity in this list, our custom `NativeActivity`, will be treated as the main activity (and the metadata xml fields which include our native code are always added to this first activity.)
+
 ## Android Environment Setup
 
 - Install [Android Studio](https://developer.android.com/studio) or [sdkmanager](https://developer.android.com/tools/sdkmanager)
