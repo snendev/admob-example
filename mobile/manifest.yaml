@@ -1,0 +1,22 @@
+android:
+  gradle: true # this does not work on Windows
+  assets: ["../../assets/audio", "../../assets/icons", "../../assets/scenes"]
+  icon: "ios-src/Assets.xcassets/AppIcon.appiconset/icon_1024x1024.png"
+  dependencies:
+    - "com.google.android.gms:play-services-ads:22.6.0"
+  manifest:
+    package: "dev.snen.adexample"
+    version_code: 1
+    application:
+      has_code: true
+      label: "Ad Example"
+      meta_data:
+        - name: "com.google.android.gms.ads.APPLICATION_ID"
+          # rewarded interstitial demo id
+          # https://developers.google.com/admob/android/test-ads#sample_ad_units
+          value: "ca-app-pub-3940256099942544~5354046379"
+      activities:
+        - name: ".NativeActivity"
+          exported: true
+        - name: ".AdActivity"
+          exported: true

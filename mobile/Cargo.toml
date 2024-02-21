@@ -1,0 +1,49 @@
+[package]
+name = "snendev_ad_example_mobile"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "snendev_ad_example_mobile"
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+# the game crate
+snendev_ad_example = { path = ".." }
+
+# bevy
+bevy = { version = "0.12" }
+
+# other deps
+anyhow = "1.0"
+winit = { version = "0.28", default-features = false }
+
+# android
+jni = "0.20"
+
+# [target."cfg(target_os = \"ios\")".dependencies.objc2]
+# version = "0.5"
+# default-features = false
+# features = [ "std", "gnustep-1-8" ] }
+
+# As long as Kira doesn't expose a feature for this, we need to enable it
+# See https://github.com/tesselode/kira/pull/51
+# [target."cfg(target_os = \"android\")".dependencies.cpal]
+# version = "0.15"
+# features = ["oboe-shared-stdcxx"]
+
+[package.metadata.android]
+package = "snen.dev.adexample"
+apk_name = "AdExample"
+assets = "../assets"
+strip = "strip"
+resources = "../build/android/res"
+build_targets = ["aarch64-linux-android", "armv7-linux-androideabi"]
+
+[package.metadata.android.sdk]
+target_sdk_version = 33
+
+[package.metadata.android.application]
+icon = "@mipmap/icon"
+label = "Ad Example"

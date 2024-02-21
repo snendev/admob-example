@@ -1,0 +1,2 @@
+# it is convenient to keep bevy derives on a separate line
+merge_derives = false
