@@ -40,14 +40,8 @@ fn main() {
             Update,
             ad_button_interactions.run_if(in_state(AdRewardState::Rewarded)),
         )
-        .add_systems(
-            OnEnter(AdRewardState::NoAd),
-            show_load_ad_ui,
-        )
-        .add_systems(
-            OnEnter(AdRewardState::Rewarded),
-            show_rewarded_ui,
-        )
+        .add_systems(OnEnter(AdRewardState::NoAd), show_load_ad_ui)
+        .add_systems(OnEnter(AdRewardState::Rewarded), show_rewarded_ui)
         .add_systems(
             Update,
             detect_ad_reward
@@ -77,42 +71,51 @@ fn load_scene(mut commands: Commands, asset_server: Res<AssetServer>) {
 struct AdButton;
 
 fn ad_button_ui(mut commands: Commands) {
-    commands
-        .spawn((
-            AdButton,
-            ButtonBundle {
-                style: Style {
-                    width: Val::Px(180.),
-                    height: Val::Px(65.),
-                    margin: UiRect::all(Val::Percent(30.)),
-                    ..Default::default()
-                },
+    commands.spawn((
+        AdButton,
+        ButtonBundle {
+            style: Style {
+                width: Val::Px(180.),
+                height: Val::Px(65.),
+                margin: UiRect::all(Val::Percent(30.)),
                 ..Default::default()
             },
-        ));
+            ..Default::default()
+        },
+    ));
 }
 
 fn show_load_ad_ui(mut commands: Commands, ui_query: Query<Entity, With<AdButton>>) {
-    let Ok(entity) = ui_query.get_single() else { return ;};
+    let Ok(entity) = ui_query.get_single() else {
+        return;
+    };
     commands.entity(entity).despawn_descendants();
     commands.entity(entity).with_children(|builder| {
-        builder.spawn(TextBundle::from_section("Load Ad", TextStyle {
-            font_size: 24.,
-            color: Color::BLACK,
-            ..Default::default()
-        }));
+        builder.spawn(TextBundle::from_section(
+            "Load Ad",
+            TextStyle {
+                font_size: 24.,
+                color: Color::BLACK,
+                ..Default::default()
+            },
+        ));
     });
 }
 
 fn show_rewarded_ui(mut commands: Commands, ui_query: Query<Entity, With<AdButton>>) {
-    let Ok(entity) = ui_query.get_single() else { return ;};
+    let Ok(entity) = ui_query.get_single() else {
+        return;
+    };
     commands.entity(entity).despawn_descendants();
     commands.entity(entity).with_children(|builder| {
-        builder.spawn(TextBundle::from_section("Ad Redeemed!", TextStyle {
-            font_size: 32.,
-            color: Color::BLACK,
-            ..Default::default()
-        }));
+        builder.spawn(TextBundle::from_section(
+            "Ad Redeemed!",
+            TextStyle {
+                font_size: 32.,
+                color: Color::BLACK,
+                ..Default::default()
+            },
+        ));
     });
 }
 
@@ -154,6 +157,8 @@ fn handle_application_lifetime(
     }
 }
 
+// TODO: invoke these functions on some Event, and fire an Event when ad redemption/cancellation occurs
+
 #[cfg(target_os = "android")]
 fn start_ad_activity() -> anyhow::Result<()> {
     info!("Loading an ad!");
@@ -173,7 +178,10 @@ fn start_ad_activity() -> anyhow::Result<()> {
 }
 
 // #[cfg(target_os = android)]
-fn detect_ad_reward(mut commands: Commands, mut state: ResMut<NextState<AdRewardState>>) -> anyhow::Result<()> {
+fn detect_ad_reward(
+    mut commands: Commands,
+    mut state: ResMut<NextState<AdRewardState>>,
+) -> anyhow::Result<()> {
     info!("Detecting ad rewards!");
     #[cfg(target_os = "android")]
     let ctx = bevy::winit::ANDROID_APP
